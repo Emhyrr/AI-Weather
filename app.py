@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request
-from keras.models import load_model
+from tensorflow.keras.models import load_model
 import numpy as np
-from keras.preprocessing.image import load_img, img_to_array
+from tensorflow.keras.preprocessing.image import load_img, img_to_array
 import os
 
 app = Flask(__name__, template_folder='.')
