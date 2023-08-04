@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+  <link rel="shortcut icon" type="image/x-icon" href="/static/images/logofix.png">
+  <!-- <link rel="stylesheet" href="/static/styles/stylePredict.css"> -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <title>Weather Prediction | CNN LeNet-5</title>
+
+  <style>
+    /* Aturan CSS lainnya */
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+      background: #B6DBF6;
+    }
+
+    .header {
+      text-align: center;
+      padding: 22px;
+    }
+
+    .header_logo {
+      font-size: 36px;
+      margin-bottom: 5px;
+    }
+
+    .container {
+      display: flex;
+      justify-content: space-between;
+      padding: 30px;
+      border-radius: 30px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      align-items: center;
+      text-align: center;
+      max-width: 650px;
+      max-height: 360px;
+      width: 100%;
+      height: 100%;
+      margin-top: 10px;
+      padding: 0 20px;
+      background-color: #fff;
+      box-shadow: 13px 13px 20px #3873af;
+    }
+
+    .img-area {
+      text-align: center;
+      position: relative;
+      width: 100%;
+      height: 240px;
+      background: #e6e3e3e8;
+      margin-bottom: 20px;
+      border-radius: 15px;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .img-area img {
+      /* margin-bottom: 12px; */
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      z-index: 100;
+    }
+
+    .img-area::before {
+      content: attr(data-img);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, .5);
+      color: #fff;
+      font-weight: 500;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      pointer-events: none;
+      opacity: 0;
+      transition: all .3s ease;
+      z-index: 200;
+    }
+
+    .img-area.active:hover::before {
+      opacity: 1;
+    }
+
+    .img-area h3 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 500;
+    }
+
+    .img-area p {
+      font-size: 14px;
+      margin-top: 5px;
+      color: #999;
+    }
+
+    .img-area p span {
+      font-weight: 600;
+    }
+
+    .select-image {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 5px;
+      width: -webkit-fill-available;
+    }
+
+    .prediction-description {
+      width: 50%;
+      text-align: start;
+      margin-left: 30px;
+    }
+
+    .prediction-description h2 {
+      margin-bottom: 1px;
+      text-align: center;
+      font-size: 28px;
+    }
+
+    .prediction-description h4 {
+      margin-top: 5px;
+      margin-bottom: 5px;
+      font-size: 22px;
+    }
+
+    .prediction-description ul {
+      margin-left: 20px;
+      padding: 0;
+    }
+
+    .prediction-description li {
+      margin-bottom: 5px;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    .footer {
+      display: block;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: #f0f0f0;
+      padding: 1px;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    .footer h4 {
+      font-weight: 500;
+    }
+
+    .note {
+      display: none;
+    }
+
+    .kaki {
+      display: none;
+    }
+
+    @media only screen and (max-width: 1370px) {
+      .header_logo {
+        margin-top: 3px;
+      }
+
+      .header {
+        margin-top: 40px;
+      }
+
+      .container {
+        display: flex;
+        justify-content: space-between;
+        padding: 30px;
+        border-radius: 30px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        align-items: center;
+        text-align: center;
+        max-width: 650px;
+        width: 100%;
+        margin-top: 50px;
+        padding: 0 20px;
+        background-color: #fff;
+        box-shadow: 13px 13px 20px #3873af;
+        /* Hapus max-height: 360px; */
+        /* Tambahkan overflow-y: auto; */
+        overflow-y: auto;
+      }
+
+      .note {
+        display: none;
+      }
+    }
+
+    /* Media query for screens below 768px (layar ponsel) */
+    @media only screen and (max-width: 768px) {
+      .header_logo {
+        font-size: 24px;
+      }
+
+      .header {
+        margin-top: 5px;
+        padding: 10px;
+        text-align: center;
+      }
+
+      .container {
+        display: flex;
+        justify-content: space-between;
+        padding: 30px;
+        border-radius: 30px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        align-items: center;
+        text-align: center;
+        max-width: 650px;
+        width: 100%;
+        margin-top: 10px;
+        padding: 0 20px;
+        background-color: #fff;
+        box-shadow: 13px 13px 20px #3873af;
+        /* Hapus max-height: 360px; */
+        /* Tambahkan overflow-y: auto; */
+        overflow-y: auto;
+      }
+
+      /* Media query for screens below 768px (layar ponsel) */
+      @media only screen and (max-width: 768px) {
+        .header_logo {
+          font-size: 24px;
+        }
+
+        .container {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          max-width: 100%;
+          width: 320px;
+          padding: 0 20px;
+          /* Hapus height: 560px; */
+          /* Atur tinggi .container agar bisa menampung seluruh konten */
+          height: auto;
+          /* Tambahkan padding top dan bottom untuk memberikan ruang di atas dan bawah konten */
+          padding-top: 20px;
+          padding-bottom: 20px;
+          /* Tambahkan overflow-y: auto; agar dapat scroll jika konten melebihi tinggi layar */
+          overflow-y: auto;
+          margin-top: 30px;
+        }
+
+        .img {
+          margin-top: 20px;
+        }
+
+        .img-area {
+          margin-top: 20px;
+        }
+
+        .img-area h3 {
+          font-size: 16px;
+        }
+
+        .img-area p {
+          font-size: 12px;
+        }
+
+        .select-image {
+          font-size: 18px;
+          padding: 8px 16px;
+        }
+
+        .prediction-description {
+          width: 100%;
+          margin-left: 50px;
+          text-align: center;
+        }
+
+        .prediction-description h2 {
+          font-size: 20px;
+          text-align: center;
+          margin-right: 30px;
+        }
+
+        .prediction-description h4 {
+          font-size: 18px;
+        }
+
+        .prediction-description li {
+          font-size: 16px;
+        }
+
+        .note {
+          display: block;
+          font-size: 14px;
+          text-align: start;
+          font-weight: 600;
+          margin-top: 12px;
+          margin-bottom: 5px;
+          margin-left: 24px;
+          margin-right: 7px;
+        }
+
+        .kaki {
+          display: block;
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background-color: #f0f0f0;
+          padding: 10px;
+          text-align: center;
+        }
+
+        .kaki h4 {
+          font-weight: 500;
+          font-size: 16px;
+          margin: 0;
+        }
+
+        .footer {
+          display: none;
+        }
+      }
+
+      /* Media query for screens below 375px (layar ponsel) */
+      @media only screen and (max-width: 375px) {
+        .header_logo {
+          font-size: 24px;
+        }
+
+        .container {
+          margin-top: 10px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          max-width: 100%;
+          width: 290px;
+          padding: 0 20px;
+          /* Hapus height: 560px; */
+          /* Atur tinggi .container agar bisa menampung seluruh konten */
+          height: auto;
+          /* Tambahkan padding top dan bottom untuk memberikan ruang di atas dan bawah konten */
+          padding-top: 20px;
+          padding-bottom: 20px;
+          /* Tambahkan overflow-y: auto; agar dapat scroll jika konten melebihi tinggi layar */
+          overflow-y: auto;
+          margin-top: 30px;
+        }
+
+        .img {
+          margin-top: 20px;
+        }
+
+        .img-area {
+          margin-top: 20px;
+        }
+
+        .img-area h3 {
+          font-size: 16px;
+        }
+
+        .img-area p {
+          font-size: 12px;
+        }
+
+        .select-image {
+          font-size: 18px;
+          padding: 8px 16px;
+        }
+
+        .prediction-description {
+          width: 100%;
+          margin-left: 50px;
+          text-align: center;
+        }
+
+        .prediction-description h2 {
+          font-size: 20px;
+          text-align: center;
+          margin-right: 30px;
+        }
+
+        .prediction-description h4 {
+          font-size: 18px;
+        }
+
+        .prediction-description li {
+          font-size: 16px;
+        }
+
+        .note {
+          display: block;
+          font-size: 14px;
+          text-align: start;
+          font-weight: 600;
+          margin-top: 12px;
+          margin-bottom: 5px;
+          margin-left: 24px;
+          margin-right: 7px;
+        }
+
+        .kaki {
+          display: block;
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background-color: #f0f0f0;
+          padding: 10px;
+          text-align: center;
+        }
+
+        .kaki h4 {
+          font-weight: 500;
+          font-size: 16px;
+          margin: 0;
+        }
+
+        .footer {
+          display: none;
+        }
+      }
+
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <h1 class="header_logo">Implementasi Model CNN</h1>
+    <h1 class="header_logo">(LeNet-5)</h1>
+    <p class="note">*Silahkan scroll pada kotak putih untuk melihat hasil prediksi gambar.</p>
+  </div>
+    <div class="container">
+      <div class="row">
+        <div class="img-area" data-img="{{ user_image }}">
+          <i class='bx bxs-cloud-upload icon'></i>
+          <h3>Upload Image</h3>
+          <p>Please Upload Images for CNN Model Testing</p>
+        </div>
+        <div class="row">
+          <a href="/" class="select-image">Select New Image</a>
+        </div>
+      </div>
+      <div class="prediction-description" style="text-align: start;">
+        <h2>Prediction Result</h2>
+        <h4>Nilai Prediksi :</h4>
+        <ul>
+          <li>Berawan : {{ '%.1f' % (prob[0][0] * 100) }}%</li>
+          <li>Cerah : {{ '%.1f' % (prob[0][1] * 100) }}%</li>
+          <li>Cerah Berawan : {{ '%.1f' % (prob[0][2] * 100) }}%</li>
+          <li>Hujan : {{ '%.1f' % (prob[0][3] * 100) }}%</li>
+        </ul>
+        <h4>Hasil Prediksi : {{cuaca}}</h4>
+      </div>
+    </div>
+
+  <div class="kaki">
+    <h4>Klasifikasi Gambar Cuaca Model CNN LeNet-5 | Miranda Sahfira Tuna 2023</h4>
+  </div>
+
+  <footer class="footer">
+    <h4>Klasifikasi Gambar Cuaca Model CNN LeNet-5 | Miranda Sahfira Tuna 2023</h4>
+  </footer>
+
+  <!-- Load JavaScript to display uploaded image -->
+  <script>
+    // Ambil jalur file foto dari atribut data-img
+    var imgArea = document.querySelector('.img-area');
+    var imgPath = imgArea.getAttribute('data-img');
+
+    // Tampilkan foto dalam elemen <img>
+    var imgElement = document.createElement('img');
+    imgElement.src = imgPath;
+    imgElement.alt = 'Uploaded Image';
+    imgArea.appendChild(imgElement);
+  </script>
+
+</body>
+
+</html>

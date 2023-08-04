@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+  <link rel="shortcut icon" type="image/x-icon" href="/static/images/logofix.png">>
+  <link rel="stylesheet" href="/static/styles/styleindex.css">
+  <title>Weather Prediction | CNN LeNet-5</title>
+
+  <style>
+    /* General styles */
+    .header_logo {
+      font-size: 36px;
+      /* Original font size */
+    }
+
+    .select-image,
+    .predict-image {
+      flex: 0 0 100%;
+      margin-top: 10px;
+    }
+
+    /* Media query for screens below 1370px */
+    @media only screen and (max-width: 1370px) {
+      .header{
+        margin-top: 35px;
+      }
+      .header_logo {
+        font-size: 34px;
+        /* Font size for smaller screens */
+      }
+      .container{
+        max-width: 420px;
+	      max-height: 320px;
+      }
+      .img-area{
+        margin-bottom: 5px;
+        height: 200px;
+      }
+      .select-image{
+        padding: 12px 0;
+      }
+      .predict-image{
+        padding: 12px 0;
+      }
+    }
+
+    /* Media query for screens below 768px */
+    @media only screen and (max-width: 768px) {
+      .header{
+        margin-top: 30px;
+      }
+      .header_logo {
+        font-size: 28px;
+        /* Font size for smaller screens */
+      }
+      .container{
+        max-width: 330px;
+	      max-height: 360px;
+      }
+      .img-area{
+        margin-bottom: 8px;
+      }
+      .select-image{
+        padding: 10px 0;
+      }
+      .predict-image{
+        padding: 10px 0;
+      }
+      .footer h4{
+        margin-right: 30px;
+        display: none;
+      }
+      .footer::after {
+        content: "Klasifikasi Gambar Cuaca Model CNN LeNet-5 | Miranda Sahfira Tuna 2023"; /* Set the desired text as pseudo-element content */
+        display: block;
+        margin-right: 30px;
+      }
+    }
+
+    /* Media query for screens below 480px */
+    @media only screen and (max-width: 480px) {
+      .header{
+        margin-top: 30px;
+      }
+      .header_logo {
+        font-size: 28px;
+        
+        /* Font size for smaller screens */
+      }
+      .container{
+        max-width: 280px;
+	      max-height: 300px;
+        margin-top: 15px;
+      }
+      .img-area{
+        margin-bottom: 2px;
+        max-height: 200px;
+      }
+      .select-image{
+        padding: 10px 0;
+      }
+      .predict-image{
+        padding: 10px 0;
+      }
+      .footer h4{
+        margin-right: 30px;
+      }
+      .footer::after {
+        content: "Klasifikasi Gambar Cuaca Model CNN LeNet-5 | Miranda Sahfira Tuna 2023"; /* Set the desired text as pseudo-element content */
+        display: block;
+        margin-right: 30px;
+      }
+    }
+
+    @media only screen and (max-width: 375px) {
+      .header{
+        margin-top: 25px;
+      }
+      .header_logo {
+        font-size: 22px;
+        
+        /* Font size for smaller screens */
+      }
+      .container{
+        max-width: 280px;
+	      max-height: 300px;
+        margin-top: 15px;
+      }
+      .img-area{
+        margin-bottom: 2px;
+        max-height: 200px;
+      }
+      .select-image{
+        padding: 10px 0;
+      }
+      .predict-image{
+        padding: 10px 0;
+      }
+      .footer h4{
+        margin-right: 30px;
+      }
+      .footer::after {
+        content: "Klasifikasi Gambar Cuaca Model CNN LeNet-5 | Miranda Sahfira Tuna 2023"; /* Set the desired text as pseudo-element content */
+        display: block;
+        margin-right: 30px;
+      }
+    }
+
+    /* Additional styles for responsiveness */
+    .header {
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+    }
+
+    .form-inline {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .img-area {
+      text-align: center;
+    }
+
+    /* Adjust input elements for better layout on small screens */
+    .select-image button,
+    .predict-image {
+      width: 100%;
+    }
+  </style>
+</head>
+
+  <body>
+    <div class="header" style="margin-top: 25px;">
+      <h1 class="header_logo">Implementasi Model CNN</h1>
+      <h1 class="header_logo" style="margin-bottom: 15px;">(LeNet-5)</h1>
+    </div>
+    <div class="container">
+      <div class="col-lg-12">
+        <center>
+          <form class="form-inline" action="/predict" method="post" enctype="multipart/form-data">
+            <div class="img-area" data-img="">
+              <i class='bx bxs-cloud-upload icon'></i>
+              <h3 style="margin-bottom: 10px;">Upload Image</h3>
+              <p>
+                <center>Please Upload Images for CNN Model Testing</center>
+              </p>
+            </div>
+            <input id="file-upload" type="file" name="file" class="select-image">
+            <br>
+            <input type="submit" class="predict-image" value="Predict">
+          </form>
+        </center>
+      </div>
+    </div>
+    <footer class="footer">
+      <h4>Klasifikasi Gambar Cuaca Model CNN LeNet-5 | Miranda Sahfira Tuna 2023</h4>
+    </footer>
+  
+    <script src="static/js/script.js"></script>
+  </body>
+
+</html>
