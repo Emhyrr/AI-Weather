@@ -1,5 +1,3 @@
---no-cache-dir
---prefer-binary
-tensorflow==2.13.0
+tensorflow==2.13.*
 flask==2.3.2
 gunicorn==19.9.0
