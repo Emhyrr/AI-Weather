@@ -3,6 +3,7 @@ from tensorflow.keras.models import load_model
 import numpy as np
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
 import os
+from PIL import Image
 
 app = Flask(__name__, template_folder='.')
 model = load_model('s2augm.h5')
@@ -19,11 +20,22 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXT
 
 # Fungsi untuk memuat dan mempersiapkan gambar dengan ukuran yang sesuai
-def read_image(filename):
-    img = load_img(filename, target_size=(224, 224))  # Ubah ukuran target menjadi (224, 224) sesuai dengan input shape model
+def read_image(filename, target_size=(224, 224)):
+    img = load_img(filename, target_size=target_size)
     x = img_to_array(img)
     x = np.expand_dims(x, axis=0)
     return x
+
+# Function to compress the image before saving
+def compress_image(image, output_path, quality=85):
+    image.save(output_path, optimize=True, quality=quality)
+
+# Function to resize the image before saving
+def resize_image(image, output_path, target_size=(224, 224)):
+    resized_image = image.resize(target_size)
+    resized_image.save(output_path)
+
+UPLOAD_FOLDER = 'static/images'
 
 @app.route('/predict', methods=['GET', 'POST'])
 def predict():
@@ -31,8 +43,13 @@ def predict():
         file = request.files['file']
         if file and allowed_file(file.filename):
             filename = file.filename
-            file_path = os.path.join('static/images', filename)
-            file.save(file_path)
+            file_path = os.path.join(UPLOAD_FOLDER, filename)
+
+            # Compress and resize the image before saving
+            image = Image.open(file)
+            compress_image(image, file_path, quality=85)
+            resize_image(image, file_path, target_size=(224, 224))
+
             img = read_image(file_path)
             class_prediction = model.predict(img)
             classes_x = np.argmax(class_prediction, axis=1)
