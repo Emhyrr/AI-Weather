@@ -1,4 +1,4 @@
 tensorflow-cpu
-flask
-gunicorn
-pillow
+flask==2.3.2
+gunicorn==19.9.0
+pillow==10.0.0
